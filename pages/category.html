@@ -8,7 +8,7 @@
     <div class="category-content">
         <div class="category-option">
             <button class="btn btn-primary" id="addBtn">新增</button>
-            <button class="btn btn-danger">批量删除</button>
+            <button class="btn btn-danger" id="batchBtn">批量删除</button>
         </div>
         <table class="table table-bordered">
             <thead>
@@ -62,10 +62,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 <script>
     // 所有栏目数据
@@ -187,7 +183,6 @@
         
     })
 
-
     // 修改
     // 事件代理
     $('.table').on('click','.category-edit',function(){
@@ -229,7 +224,40 @@
         
     })
 
+    // 批量删除
+    $('#batchBtn').click(function(){
+        // 选中被勾选的多选框
+        // 如何拿到被勾选的多选框的值？
 
+        // 用于存放所有被勾选的多选框的id
+        var arr = [];
+        Array.from($(':checkbox:checked')).forEach(function(item){
+            // console.log(item.value)
+            // console.log($(item).val())
+            arr.push($(item).val())
+        })
+        // console.log(arr.toString(),'---')
+        // console.log(arr.join(','),'---')
+        if(arr.length > 0){
+            var result = confirm('是否确定删除所选数据？')
+            if(result){
+                // 批量删除操作
+                myAjax('/manager/category/batchDeleteCategory','post',{ids:arr.toString()},function(res){
+                    if(res.status == 200){
+                        // 更新表格数据
+                        findAllCategory();
+                    } else {
+                        alert('删除失败')
+                        // 改变多选框的状态
+                        $(':checkbox:checked').prop('checked',false);
+                    }
+                })
+            }
+        } else {
+            alert('请勾选需要删除的数据')
+        }
+
+    })
 
 
 

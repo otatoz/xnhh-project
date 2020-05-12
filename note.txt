@@ -30,7 +30,35 @@
     1、确保数据库密码正确
         在xshell中登录mysql时输入的那个密码
     2、仍然连接不上
-        参考博客https://blog.csdn.net/qq_42720683/article/details/100544611
+        参考博客：https://blog.csdn.net/qq_42720683/article/details/100544611
     
 四、滚动条的样式设置
     jquery.nicescroll.js
+
+五、prop与attr的区别
+    参考博客：https://blog.csdn.net/csdnluolei/article/details/86134815
+
+六、分页插件
+    http://www.jq22.com/jquery-info21889
+
+
+
+---今天任务---
+1、自己完善栏目管理所有功能
+2、完成文章管理批量删除、删除
+3、解决分页插件的bug
+
+
+
+
+
+今天下午
+    批量删除、分页查询
+周三
+    文章发布(图片上传、富文本编辑器)、文章的搜索、用户管理、注册
+周四
+    评论管理、在html中使用vue查询文章、首页(echarts)、登录
+周五
+    完善、部署
+
+
