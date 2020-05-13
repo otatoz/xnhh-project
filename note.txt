@@ -41,6 +41,8 @@
 六、分页插件
     http://www.jq22.com/jquery-info21889
 
+七、日期选择器插件
+    http://www.jq22.com/jquery-info10555
 
 
 ---今天任务---
