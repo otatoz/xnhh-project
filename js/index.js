@@ -25,4 +25,6 @@ $(function(){
            color:'#ccc'
        })
    }) 
+   //页面刚加载显示首页
+   $('.right-content').load('./pages/home.html')
 })

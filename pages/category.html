@@ -119,7 +119,7 @@
             res.data.forEach(function(item){
                 // 遍历生成下拉选项
                 var newOption = $(`
-                    <option value=" `+item.id+` ">`+item.name+`</option>
+                    <option value="`+item.id+`">`+item.name+`</option>
                 `)
                 // 追加到下拉框中
                 $('#category-parent').append(newOption);
