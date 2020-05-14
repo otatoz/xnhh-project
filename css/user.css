@@ -10,3 +10,6 @@
 .list-group-item div{
     display: inline-block;
 }
+#addUserBtn{
+    margin: 10px 0;
+}

@@ -12,17 +12,125 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="home-tab">
-            
+            <button class="btn btn-primary" id="addUserBtn">新增</button>
+            <div id="adminPage">
+
+            </div>
         </div>
         <div class="tab-pane fade" id="editor" role="tabpanel" aria-labelledby="profile-tab">2</div>
-        <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="contact-tab">3</div>
+        <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="contact-tab">
+
+        </div>
+    </div>
+
+    <!-- 新增用户模态框 -->
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">新增用户</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                      <label for="username">用户名</label>
+                      <input type="email" class="form-control" id="username" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">昵称</label>
+                        <input type="email" class="form-control" id="nickname" aria-describedby="emailHelp">
+                      </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" class="form-control" id="password" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordSure">确认密码</label>
+                        <input type="password" class="form-control" id="passwordSure" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">手机号</label>
+                        <input type="email" class="form-control" id="telephone" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                      <label for="role">注册角色</label>
+                      <select name="" id="role" class="form-control">
+                          <option value="admin">管理员</option>
+                          <option value="editor">编辑</option>
+                          <option value="user">会员</option>
+                      </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="saveBtn">确定</button>
+            </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
+    // 改变用户的状态
+    $('#user').on('click','.changeStatus',function(){
+        // 获取当前用户id
+        var id = $(this).closest('ul').find('input').val();
+        // 根据id查询用户信息
+        myAjax('/manager/user/findUserById','get',{id:id},function(res){
+            // 根据用户信息中状态的不同来封装不同的参数
+            var obj = {
+                id:id,
+                status:!res.data.enabled
+            }
+            myAjax('/manager/user/changeStatus','post',obj,function(res){
+                alert(res.message)
+                findAllUser();
+            })
+        })
+    })
+
+    // 保存
+    $('#saveBtn').click(function(){
+        var obj = {
+            username:$('#username').val(),
+            nickname:$('#nickname').val(),
+            password:$('#password').val(),
+            email:$('#email').val(),
+            role:$('#role').val()
+        }
+        myAjax('/manager/user/reg','post',obj,function(res){
+            console.log(res)
+        })
+    })
+
+    // 判断两次输入的密码是否一致
+    $('#passwordSure').on('blur',function(){
+        var password = $('#password').val();
+        var passwordSure= $('#passwordSure').val();
+        if(password != passwordSure){
+            alert('请确保两次输入的密码一致!')
+        }
+    })
+
+    // 新增按钮
+    $('#addUserBtn').click(function(){
+        $('#userModal').modal('show');
+    })
+
     // 查询所有用户
     findAllUser();
     function findAllUser(){
         myAjax('/manager/user/findAllUser','get',{},function(res){
+            // 清空数据
+            $('#user').empty();
+
             // 过滤
             var admin = res.data.filter(function(item){
                 return item.role == 'admin';
@@ -37,7 +145,7 @@
             admin.forEach(function(item){
                 var newDiv = $(`
                     <div class="card" style="width: 18rem;display:inline-block;margin-right:10px;margin-bottom:10px;">
-                        <img src="`+(item.userface ? item.userface : '../images/logo.png')+`" class="card-img-top" alt="...">
+                        <img style="height:180px" src="`+(item.userface ? item.userface : '../images/logo.png')+`" class="card-img-top" alt="...">
                         <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             <div>用户名</div>
@@ -59,7 +167,37 @@
                         </ul>
                     </div> 
                 `)
-                $('#admin').append(newDiv)
+                $('#adminPage').append(newDiv)
+            })
+
+            user.forEach(function(item){
+                var newDiv = $(`
+                    <div class="card" style="width: 18rem;display:inline-block;margin-right:10px;margin-bottom:10px;">
+                        <img style="height:180px" src="`+(item.userface ? item.userface : '../images/logo.png')+`" class="card-img-top" alt="...">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" style="display:none;">
+                                <input type="text" value="`+item.id+`"> 
+                            </li>
+                            <li class="list-group-item">
+                                <div>用户名</div>
+                                <div>`+item.nickname+`</div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>真实姓名</div>
+                                <div>`+item.username+`</div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>邮箱</div>
+                                <div>`+item.email+`</div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>操作</div>
+                                <div class="changeStatus">`+(item.enabled ? '<button class="btn btn-info">正常</button>' : '<button class="btn btn-danger">禁言中...</button>')+`</div>
+                            </li>
+                        </ul>
+                    </div> 
+                `)
+                $('#user').append(newDiv)
             })
         })
     }
