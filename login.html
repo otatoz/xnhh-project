@@ -37,10 +37,12 @@
                             localStorage.setItem('token',res.data.token)
                             // 从浏览器获取token
                             var token = localStorage.getItem('token');
+                            // token存在时跳转(也就是用户登录了)
                             if(token){
-                                // token存在时跳转(也就是用户登录了)
-                                location.href = 'http://127.0.0.1:5500/index.html';
-                                // location.href = '47.93.255.92/project-day01/index.html';
+                                // 本地测试时使用127.0.0.1:5500
+                                // location.href = 'http://127.0.0.1:5500/index.html';
+                                // 部署至服务器时,使用ip
+                                location.href = 'http://47.93.255.92/project/index.html';
                             }
                         } else {
                             alert('请输入正确的用户名和密码！')

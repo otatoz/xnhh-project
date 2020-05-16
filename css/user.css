@@ -13,3 +13,7 @@
 #addUserBtn{
     margin: 10px 0;
 }
+.user {
+    height: 100%;
+    overflow: auto;
+}
